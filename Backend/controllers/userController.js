@@ -5,9 +5,11 @@ import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCooki
 
 import sendEmail from "../utils/helpers/sendEmail.js";
 import { v2 as cloudinary } from "cloudinary";
-import OTP from "../models/otp.js";
+
 import mongoose from "mongoose";
 import generateOTP from "../utils/helpers/generateOTP.js";
+import dotenv from "dotenv"
+dotenv.config()
 
 const getUserProfile = async (req, res) => {
 	// We will fetch user profile either with username or userId
@@ -52,7 +54,7 @@ const signupUser = async (req, res) => {
 		
 		const generatedOTP= await generateOTP();
 		const mailOptions= {
-			from :'monu914087@gmail.com',
+			from :process.env.MAIL_SENDER,
 			to:email,
 			subject:'opt verification for NamSocial',
 			html:`<p>your otp is</p> <p style="color:tomato; font-size:25px"> <b>${generatedOTP}</b></p> <p>This code expires in 5 min hour</p>`
@@ -327,7 +329,7 @@ const forgotOtp = async (req, res) => {
 		
 		const generatedOTP= await generateOTP();
 		const mailOptions= {
-			from :'monu914087@gmail.com',
+			from :process.env.MAIL_SENDER,
 			to:email,
 			subject:'Reset Password otp for NamSocial',
 			html:`<p>your otp is</p> <p style="color:tomato; font-size:25px"> <b>${generatedOTP}</b></p> <p>This code expires in 5 min hour</p>`

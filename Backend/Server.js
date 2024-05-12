@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import dotenv from "dotenv"
 import connectDB from './db/connectDB.js'
 import cookieParser from 'cookie-parser'
@@ -8,6 +9,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import {v2 as cloudinary} from 'cloudinary' 
 dotenv.config()
 connectDB();
+const _dirname= path.resolve()
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
 	api_key: process.env.CLOUDINARY_API_KEY,
@@ -27,6 +29,16 @@ app.use("/api/messages", messageRoutes);
 
 
 
- const PORT = process.env.PORT || 5000;
+ // http://localhost:5000 => backend,frontend
+ const __dirname = path.resolve();
 
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/Frontend/dist")));
+
+	// react app
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "Frontend", "dist", "index.html"));
+	});
+}
+ const PORT = process.env.PORT;
  app.listen(PORT,()=> console.log(`server started at ${PORT}`))
